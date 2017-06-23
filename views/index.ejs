@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Sockets Survey</title>
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    	<script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    	<script type="text/javascript">
+    		$(document).ready(function(){
+    			var socket = io.connect();
+    			// all socket code
+    			$('form').submit(function(e){
+    				e.preventDefault();
+    				socket.emit('posting_form', { form:'stuff',
+	    				name: $('#name').val(),
+	    				location: $('#location').val(),
+	    				language: $('#language').val(),
+	    				comment: $('#comment').val() 
+    			    });
+    			});
+    			socket.on('server_response', function(data){
+    				console.log('the server says '+ data.response);
+    				console.log('the name I got back was '+ data.name);
+
+    				$('#update').html('Thanks for submitting the form.  Here\'s your info <br> Name: '+data.name+'<br> and Your Number is '+data.id)
+    			})
+
+    		})
+    	</script>
+</head>
+<body>
+	<h1> Survey Says! </h1>
+
+	<p id="update"></p>
+	<form>
+		<label for="name"> Your Name: </label>
+		<input type="text" id="name" name="name">
+
+		<label for="location"> Dojo Location: </label>
+		<select id="location" name="location">
+			<option value="Dallas"> Dallas </option>
+			<option value="San Jose"> San Jose </option>
+			<option value="Seattle"> Seattle </option>
+		</select>
+
+		<label for="language"> Favorite Language </label>
+		<select id="language" name="language">
+			<option value="JavaScript"> JavaScript </option>
+			<option value="PHP"> PHP </option>
+			<option value="Python"> Python </option>
+		</select>
+
+		<label for="comment"> Comments (optional): </label>
+		<textarea id="comment" name="comment"></textarea>
+
+		<input type="submit" value="Submit">
+	</form>
+</body>
